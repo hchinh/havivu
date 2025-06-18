@@ -1,12 +1,11 @@
 import { prisma } from '@/lib/prisma'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
-type Params = { params: { slug: string } }
-
-export async function GET(_: Request, { params }: Params) {
+export async function GET(_: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
 	try {
+		const { slug } = await params
 		const place = await prisma.place.findUnique({
-			where: { slug: params.slug },
+			where: { slug },
 			include: { reviews: true },
 		})
 
@@ -21,12 +20,13 @@ export async function GET(_: Request, { params }: Params) {
 	}
 }
 
-export async function PUT(req: Request, { params }: Params) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
 	try {
+		const { slug } = await params
 		const data = await req.json()
 
 		const updated = await prisma.place.update({
-			where: { slug: params.slug },
+			where: { slug },
 			data,
 		})
 
@@ -37,10 +37,11 @@ export async function PUT(req: Request, { params }: Params) {
 	}
 }
 
-export async function DELETE(_: Request, { params }: Params) {
+export async function DELETE(_: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
+	const { slug } = await params
 	try {
 		await prisma.place.delete({
-			where: { slug: params.slug },
+			where: { slug },
 		})
 
 		return NextResponse.json({ message: 'Đã xóa địa điểm' })
