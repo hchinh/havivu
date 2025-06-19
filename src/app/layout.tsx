@@ -1,6 +1,7 @@
 import Footer from '@/components/footer'
 import Navbar from '@/components/navbar'
 import { ReactQueryProvider } from '@/hooks/providers'
+import { Analytics } from '@vercel/analytics/next'
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
@@ -33,7 +34,10 @@ export default function RootLayout({
 			>
 				<Navbar />
 				<main className="flex-1 px-4 py-6 max-w-7xl mx-auto w-full">
-					<ReactQueryProvider>{children}</ReactQueryProvider>
+					<ReactQueryProvider>
+						{children}
+						<Analytics />
+					</ReactQueryProvider>
 				</main>
 				<Footer />
 			</body>
